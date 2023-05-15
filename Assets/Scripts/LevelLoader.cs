@@ -5,19 +5,28 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
+    
     public int minXsize, minYsize, minZsize, maxXsize, maxYsize, maxZsize;
     public GameObject labObject, pathObject, ball, camera;
     [Range(0, 1)] public float alphaOfWalls;
 
     private CreateLaberit lab;
     private FindPath path;
+    private AIlaberinto ai;
 
     private void Awake()
     {
         path = pathObject.GetComponent<FindPath>();
         lab = labObject.GetComponent<CreateLaberit>();
+        ai = GetComponent<AIlaberinto>();
+        
+        ai.activated = false;
+        ai.path = path;
+        
         RestartLab();
         ball = Instantiate(ball, transform.position, transform.rotation);
+
+        ai.ball = ball;
         InvokeRepeating( nameof(ResetPath), 0.333f, 0.333f);
     }
 
@@ -81,5 +90,14 @@ public class LevelLoader : MonoBehaviour
         }
 
         return coordsCasilla;
+    }
+
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            ai.activated = !ai.activated;
+        }
     }
 }

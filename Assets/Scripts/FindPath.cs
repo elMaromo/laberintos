@@ -110,7 +110,7 @@ public class FindPath : MonoBehaviour
 
             if (i == sol.Count - 1)
             {
-                //newCube.transform.localScale += Vector3.one;
+                newCube.transform.localScale += Vector3.one;
                 //newCube.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
                 lastPath = newCube.GetComponent<PathScript>();
             }
