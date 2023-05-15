@@ -9,6 +9,7 @@ public class AIlaberinto : MonoBehaviour
     [HideInInspector] public GameObject ball;
     public bool activated;
     private Rigidbody rb;
+    [HideInInspector] public Rigidbody rbBall;
 
     private void Awake()
     {
@@ -26,6 +27,10 @@ public class AIlaberinto : MonoBehaviour
             float angle = Vector3.Angle(targetDir, Vector3.down);
             Vector3 perpendicularVector = Vector3.Cross(targetDir, Vector3.down);
 
+            //if(rbBall.velocity.magnitude > 0.5)
+            //{
+            //    perpendicularVector = Vector3.zero;
+            //}
             rb.AddTorque(perpendicularVector * speed * Time.deltaTime);
         }
     }
@@ -34,15 +39,14 @@ public class AIlaberinto : MonoBehaviour
     {
         Vector3 target = Vector3.zero;
 
-        if ((path.pathList.Count > 1))
-        {
-            target = path.pathList[1].transform.position;
-        }
-
         if ((path.pathList.Count > 2))
         {
-            target.x = target.x + path.pathList[1].transform.position.x;
-            target.x = target.x / 2;
+            return path.pathList[2].transform.position;
+        }
+
+        if ((path.pathList.Count > 1))
+        {
+            return path.pathList[1].transform.position;
         }
 
         //if ((path.pathList.Count > 3))

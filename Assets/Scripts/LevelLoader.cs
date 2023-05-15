@@ -27,6 +27,7 @@ public class LevelLoader : MonoBehaviour
         ball = Instantiate(ball, transform.position, transform.rotation);
 
         ai.ball = ball;
+        ai.rbBall = ball.GetComponent<Rigidbody>();
         InvokeRepeating( nameof(ResetPath), 0.333f, 0.333f);
     }
 
