@@ -100,7 +100,7 @@ public class CreateLaberit : MonoBehaviour
             {
                 transitionsSol.Add(transitions[nextTrans]);
                 succes = true;
-                transitions[nextTrans].Activate();
+                //transitions[nextTrans].Activate();
                 joinSolutions(getFirstSol(transitions[nextTrans]), getSecondSol(transitions[nextTrans]));
             }
             transitions.RemoveAt(nextTrans);
@@ -157,7 +157,22 @@ public class CreateLaberit : MonoBehaviour
 
         return true;
     }
+
+
+    public IEnumerator VerBonito( float timeToWait )
+    {
+        float timePerCas = timeToWait / (float)transitionsSol.Count;
+
+        for (int i = 0; i < transitionsSol.Count; i++)
+        {
+            transitionsSol[i].Activate();
+            yield return new WaitForSeconds(timePerCas);
+        }
+    }
 }
+
+
+
 
 public class Transition
 {
@@ -173,4 +188,5 @@ public class Transition
         casA.DestroyWallNextTo(casB);
         casB.DestroyWallNextTo(casA);
     }
+
 }

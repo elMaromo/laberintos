@@ -122,4 +122,23 @@ public class FindPath : MonoBehaviour
             
         }
     }
+
+
+    public IEnumerator VerBonito(float timeToWait)
+    {
+        float timePerCas = timeToWait / (float)pathList.Count;
+        for (int i = 0; i < pathList.Count; i++)
+        {
+            pathList[i].SetActive(true);
+            yield return new WaitForSeconds(timePerCas);
+        }
+    }
+
+    public void DeactivatePath()
+    {
+        for (int i = 0; i < pathList.Count; i++)
+        {
+            pathList[i].SetActive(false);
+        }
+    }
 }

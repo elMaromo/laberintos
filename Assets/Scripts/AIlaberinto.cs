@@ -27,10 +27,10 @@ public class AIlaberinto : MonoBehaviour
             float angle = Vector3.Angle(targetDir, Vector3.down);
             Vector3 perpendicularVector = Vector3.Cross(targetDir, Vector3.down);
 
-            //if(rbBall.velocity.magnitude > 0.5)
-            //{
-            //    perpendicularVector = Vector3.zero;
-            //}
+            if(rb.angularVelocity.magnitude > 0.5 && angle < 30 )
+            {
+                perpendicularVector = Vector3.zero;
+            }
             rb.AddTorque(perpendicularVector * speed * Time.deltaTime);
         }
     }

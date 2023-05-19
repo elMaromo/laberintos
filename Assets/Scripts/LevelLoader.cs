@@ -7,7 +7,9 @@ public class LevelLoader : MonoBehaviour
 {
     
     public int minXsize, minYsize, minZsize, maxXsize, maxYsize, maxZsize;
-    public GameObject labObject, pathObject, ball, camera;
+    public float timeToCreateLab, timeToCreatePath;
+    private HasAI hasAi;
+    public GameObject labObject, pathObject, ball, cam;
     [Range(0, 1)] public float alphaOfWalls;
 
     private CreateLaberit lab;
@@ -16,11 +18,12 @@ public class LevelLoader : MonoBehaviour
 
     private void Awake()
     {
+        hasAi = GameObject.FindGameObjectsWithTag("AIManager")[0].GetComponent<HasAI>();
         path = pathObject.GetComponent<FindPath>();
         lab = labObject.GetComponent<CreateLaberit>();
         ai = GetComponent<AIlaberinto>();
         
-        ai.activated = false;
+        ai.activated = hasAi.hasAI;
         ai.path = path;
         
         RestartLab();
@@ -28,7 +31,7 @@ public class LevelLoader : MonoBehaviour
 
         ai.ball = ball;
         ai.rbBall = ball.GetComponent<Rigidbody>();
-        InvokeRepeating( nameof(ResetPath), 0.333f, 0.333f);
+        StartCoroutine(VerBonito());
     }
 
     private void LateUpdate()
@@ -42,13 +45,13 @@ public class LevelLoader : MonoBehaviour
     private void RestartLab()
     {
         RandomizeSize();
-        Vector3 cameraPos = camera.transform.position;
+        Vector3 cameraPos = cam.transform.position;
         cameraPos.z =+ (lab.tamZ)/2;
         if( lab.tamZ%2 == 0)
         {
             cameraPos.z -= 0.5f;
         }
-        camera.transform.position = cameraPos;
+        cam.transform.position = cameraPos;
         lab.CreateLab();
         path.findPath(lab, lab.casillas[0,0,0], transform);
     }
@@ -99,6 +102,21 @@ public class LevelLoader : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.O))
         {
             ai.activated = !ai.activated;
+            hasAi.hasAI = ai.activated;
         }
     }
+
+    private IEnumerator VerBonito()
+    {
+        path.DeactivatePath();
+        StartCoroutine(lab.VerBonito(timeToCreateLab));
+        yield return new WaitForSeconds(timeToCreateLab);
+        StartCoroutine(path.VerBonito(timeToCreatePath));
+        yield return new WaitForSeconds(timeToCreatePath);
+        InvokeRepeating(nameof(ResetPath), 0.333f, 0.333f);
+    }
 }
+
+
+
+
