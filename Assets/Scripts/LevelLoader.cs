@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
-    
+
     public int minXsize, minYsize, minZsize, maxXsize, maxYsize, maxZsize;
     public float timeToCreateLab, timeToCreatePath;
     private HasAI hasAi;
@@ -22,15 +22,16 @@ public class LevelLoader : MonoBehaviour
         path = pathObject.GetComponent<FindPath>();
         lab = labObject.GetComponent<CreateLaberit>();
         ai = GetComponent<AIlaberinto>();
-        
-        ai.activated = hasAi.hasAI;
+
+        ai.activated = false;
         ai.path = path;
-        
+
         RestartLab();
         ball = Instantiate(ball, transform.position, transform.rotation);
 
         ai.ball = ball;
         ai.rbBall = ball.GetComponent<Rigidbody>();
+
         StartCoroutine(VerBonito());
     }
 
@@ -46,14 +47,14 @@ public class LevelLoader : MonoBehaviour
     {
         RandomizeSize();
         Vector3 cameraPos = cam.transform.position;
-        cameraPos.z =+ (lab.tamZ)/2;
-        if( lab.tamZ%2 == 0)
+        cameraPos.z = +(lab.tamZ) / 2;
+        if (lab.tamZ % 2 == 0)
         {
             cameraPos.z -= 0.5f;
         }
         cam.transform.position = cameraPos;
         lab.CreateLab();
-        path.findPath(lab, lab.casillas[0,0,0], transform);
+        path.findPath(lab, lab.casillas[0, 0, 0], transform);
     }
 
 
@@ -69,12 +70,12 @@ public class LevelLoader : MonoBehaviour
     private void ResetPath()
     {
         Vector3 corC = CasillaMasCerc();
-        path.findPath(lab, lab.casillas[(int)corC.x,(int)corC.y,(int)corC.z], transform);
+        path.findPath(lab, lab.casillas[(int)corC.x, (int)corC.y, (int)corC.z], transform);
     }
 
     Vector3 CasillaMasCerc()
     {
-        float minDist = Vector3.Distance( ball.transform.position, lab.casillas[0,0,0].transform.position);
+        float minDist = Vector3.Distance(ball.transform.position, lab.casillas[0, 0, 0].transform.position);
         Vector3 coordsCasilla = Vector3.zero;
         for (int i = 0; i < lab.tamX; i++)
         {
@@ -82,12 +83,12 @@ public class LevelLoader : MonoBehaviour
             {
                 for (int k = 0; k < lab.tamZ; k++)
                 {
-                    if( minDist> Vector3.Distance( ball.transform.position, lab.casillas[i,j,k].transform.position) )
+                    if (minDist > Vector3.Distance(ball.transform.position, lab.casillas[i, j, k].transform.position))
                     {
                         coordsCasilla.x = i;
                         coordsCasilla.y = j;
                         coordsCasilla.z = k;
-                        minDist = Vector3.Distance( ball.transform.position, lab.casillas[i,j,k].transform.position);
+                        minDist = Vector3.Distance(ball.transform.position, lab.casillas[i, j, k].transform.position);
                     }
                 }
             }
@@ -99,7 +100,7 @@ public class LevelLoader : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             ai.activated = !ai.activated;
             hasAi.hasAI = ai.activated;
@@ -114,6 +115,7 @@ public class LevelLoader : MonoBehaviour
         StartCoroutine(path.VerBonito(timeToCreatePath));
         yield return new WaitForSeconds(timeToCreatePath);
         InvokeRepeating(nameof(ResetPath), 0.333f, 0.333f);
+        ai.activated = hasAi.hasAI;
     }
 }
 
